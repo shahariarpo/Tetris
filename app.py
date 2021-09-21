@@ -134,18 +134,19 @@ class Piece(object):
 
 
 def create_grid(locked_positions={}):
-    grid = [[(0,0,0)for x in range(10)] for x in range(20)]
+    grid = [[(0, 0, 0) for x in range(10)] for x in range(20)]
 
     for i in range(len(grid)):
         for j in range(len(grid[i])):
             if (j, i) in locked_positions:
                 c = locked_positions[(j, i)]
                 grid[i][j] = c
-     return grid
+    return grid
 
 
 def convert_shape_format(shape):
-    pass
+    positions = []
+    format = shape.shape[shape.rotation % len(shape.shape)]
 
 
 def valid_space(shape, grid):
@@ -157,22 +158,20 @@ def check_lost(positions):
 
 
 def get_shape():
-    return Piece(5 ,0random.choice(shapes))
+    return Piece(5 ,0, random.choice(shapes))
 
 
 def draw_text_middle(text, size, color, surface):
     pass
 
 
-def draw_grid(surface, row, col, grid):
+def draw_grid(surface, grid):
+    sx = top_left_x
+    sy = top_left_y
     for i in range(len(grid)):
+        pygame.draw.line(surface, (128, 128, 128), (sx, sy+ i*block_size), (sx+play_width, sy+ i*block_size))
         for j in range(len(grid[i])):
-            pygame.draw.rect(surface, grid[i][j], (top_left_x + j*block_size, top_left_y+ i*block_size, block_size, block_size), 0)
-
-            pygame.draw.rect(surface, (top_left_x, top_left_y, play_width, play_height), 4)
-
-
-
+            pygame.draw.line(surface, (128, 128, 128), (sx + j*block_size, sy),(sx + j*block_size, sy + play_height))
 
 
 def clear_rows(grid, locked):
@@ -190,6 +189,13 @@ def draw_window(surface, grid):
     font = pygame.font.SysFont('comicsans', 60)
     label = font.render('Tetris', 1, (255,255,255))
     surface.blit(label, (top_left_x +play_width/2 - (label.get_width()/2), 30))
+
+    for i in range(len(grid)):
+        for j in range(len(grid[i])):
+            pygame.draw.rect(surface, grid[i][j], (top_left_x + j*block_size, top_left_y+ i*block_size, block_size, block_size), 0)
+
+            pygame.draw.rect(surface, (top_left_x, top_left_y, play_width, play_height), 5)
+
     draw_grid()
     pygame.display.update()
 
